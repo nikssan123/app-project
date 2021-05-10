@@ -4,7 +4,7 @@ export default [
 		title: 'Custom Title 1',
 		description:
 			'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus aliquam nisl non libero suscipit.',
-		image: require('../../../assets/Images/Onboarding/1.png'),
+		image: require('../../../../assets/Images/Onboarding/1.png'),
 		backgroundColor: ''
 	},
 	{
@@ -12,7 +12,7 @@ export default [
 		title: 'Custom Title 2',
 		description:
 			'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus aliquam nisl non libero suscipit.',
-		image: require('../../../assets/Images/Onboarding/2.png'),
+		image: require('../../../../assets/Images/Onboarding/2.png'),
 		backgroundColor: ''
 	},
 	{
@@ -20,7 +20,7 @@ export default [
 		title: 'Custom Title 3',
 		description:
 			'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus aliquam nisl non libero suscipit.',
-		image: require('../../../assets/Images/Onboarding/3.png'),
+		image: require('../../../../assets/Images/Onboarding/3.png'),
 		backgroundColor: ''
 	}
 ];

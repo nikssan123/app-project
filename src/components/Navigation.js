@@ -3,9 +3,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import Onboarding from '../screens/Onboarding/Onboarding';
-import SigninScreen from '../screens/Onboarding/SigninScreen';
-import SignupScreen from '../screens/Onboarding/SignupScreen';
+import Onboarding from '../screens/Auth/Onboarding/Onboarding';
+import SigninScreen from '../screens/Auth/SigninScreen';
+import SignupScreen from '../screens/Auth/SignupScreen';
 
 import HomeScreen from '../screens/Home';
 import ProfileScreen from '../screens/Profile';
@@ -36,8 +36,16 @@ export default () => {
 							options={{ headerShown: false }}
 						/>
 					) : null}
-					<Stack.Screen name="Signin" component={SigninScreen} />
-					<Stack.Screen name="Signup" component={SignupScreen} />
+					<Stack.Screen
+						name="Signin"
+						component={SigninScreen}
+						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
+						name="Signup"
+						component={SignupScreen}
+						options={{ headerShown: false }}
+					/>
 				</Stack.Navigator>
 			)}
 		</NavigationContainer>
