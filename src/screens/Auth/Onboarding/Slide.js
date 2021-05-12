@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
 		color: 'white'
 	},
 	description: {
+		fontFamily: 'Montserrat',
 		textAlign: 'center',
 		lineHeight: 24,
 		fontSize: 16,

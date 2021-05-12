@@ -4,7 +4,11 @@ import AppLoading from './src/components/AppLoading';
 
 const App = () => {
 	// return <AppLoading />;
-	return <Navigation />;
+	return (
+		<AppLoading>
+			<Navigation />
+		</AppLoading>
+	);
 };
 
 export default App;

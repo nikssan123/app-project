@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 
 import {
 	View,
@@ -26,10 +26,14 @@ import Animated, {
 import { MaterialIcons } from '@expo/vector-icons';
 
 import { LinearGradient } from 'expo-linear-gradient';
+
+import { AuthContext } from '../../../context/AuthContext';
+
 import Cover from './Cover';
 import Side from './Side';
 import SocialMediaButtons from './SocialMediaButtons';
 import ChangeAuth from './ChangeAuth';
+import { useMemo } from 'react';
 
 // onPress -> activate animation -> show loading -> hide Title and make logo larger and translate it to the center
 
@@ -40,6 +44,8 @@ const behaviour = Platform.OS === 'ios' ? 'paddding' : null;
 const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity);
 
 const Auth = ({ navigation }) => {
+	const { signin } = useContext(AuthContext);
+
 	const [ action, setAction ] = useState('signin');
 	const [ email, setEmail ] = useState('');
 	const [ password, setPassword ] = useState('');
@@ -58,10 +64,12 @@ const Auth = ({ navigation }) => {
 		// }
 		titleOpacity.value = 0;
 		setLoading(true);
+
 		setTimeout(() => {
 			// navigation.navigate('Home');
 			titleOpacity.value = 1;
 			setLoading(false);
+			signin(email, password);
 		}, 3000);
 	};
 
@@ -255,7 +263,7 @@ const Auth = ({ navigation }) => {
 		const translateX = interpolate(
 			buttonOpacity.value,
 			[ 0, 1 ],
-			[ -(width / 2 - 40), 0 ],
+			[ -(width / 2 - 35), 0 ],
 			Extrapolate.CLAMP
 		);
 		const rotate = interpolate(buttonOpacity.value, [ 0, 1 ], [ 360, 180 ], Extrapolate.CLAMP);
@@ -304,18 +312,7 @@ const Auth = ({ navigation }) => {
 								{ borderColor: '#1f1840', borderWidth: 0.4, zIndex: 10 }
 							]}
 						>
-							{/* <View
-								style={{
-									flex: 1,
-									justifyContent: 'center',
-									alignItems: 'center',
-									padding: 20,
-									borderColor: 'red',
-									borderWidth: 2
-								}}
-							> */}
 							<Text style={{ color: 'white', padding: 18 }}>X</Text>
-							{/* </View> */}
 						</AnimatedTouchableOpacity>
 						{/* Animate based on this view -> tapgesturehandler -> animated the borders - slide effect */}
 						<Cover
@@ -479,7 +476,8 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'center',
 		alignItems: 'center',
-		marginBottom: 20
+		marginBottom: 10,
+		marginTop: 10
 	},
 	title: {
 		alignSelf: 'center',
