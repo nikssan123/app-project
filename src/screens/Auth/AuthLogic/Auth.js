@@ -1,5 +1,4 @@
 import React, { useState, useContext } from 'react';
-
 import {
 	View,
 	Text,
@@ -33,7 +32,6 @@ import Cover from './Cover';
 import Side from './Side';
 import SocialMediaButtons from './SocialMediaButtons';
 import ChangeAuth from './ChangeAuth';
-import { useMemo } from 'react';
 
 // onPress -> activate animation -> show loading -> hide Title and make logo larger and translate it to the center
 

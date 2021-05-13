@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { ScrollView, KeyboardAvoidingView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -25,9 +26,21 @@ export default () => {
 		<NavigationContainer>
 			{state.isLoggedIn ? (
 				<Tab.Navigator tabBar={props => <TabBar {...props} />}>
-					<Tab.Screen name="Home" component={HomeScreen} />
-					<Tab.Screen name="Feed" component={FeedScreen} />
-					<Tab.Screen name="Profile" component={ProfileScreen} />
+					<Tab.Screen
+						name="Home"
+						component={HomeScreen}
+						initialParams={{ icon: 'home' }}
+					/>
+					<Tab.Screen
+						name="Explore"
+						component={FeedScreen}
+						initialParams={{ icon: 'compass' }}
+					/>
+					<Tab.Screen
+						name="Profile"
+						component={ProfileScreen}
+						initialParams={{ icon: 'user' }}
+					/>
 				</Tab.Navigator>
 			) : (
 				<Stack.Navigator>

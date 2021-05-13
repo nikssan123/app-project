@@ -1,6 +1,14 @@
 import React from 'react';
 import { FontAwesome } from '@expo/vector-icons';
-import { View, Text, TouchableWithoutFeedback, StyleSheet, Dimensions } from 'react-native';
+import {
+	View,
+	Text,
+	TouchableWithoutFeedback,
+	StyleSheet,
+	KeyboardAvoidingView,
+	ScrollView
+} from 'react-native';
+
 import Animated, {
 	useDerivedValue,
 	useAnimatedStyle,
@@ -18,8 +26,17 @@ const AnimatedIcon = Animated.createAnimatedComponent(FontAwesome);
 
 const TabBar = ({ state, descriptors, navigation }) => {
 	return (
-		<View style={[ styles.container ]}>
+		// <KeyboardAvoidingView>
+		// <ScrollView>
+		<View collapsable={false} style={[ styles.container ]}>
 			{state.routes.map((route, index) => {
+				{
+					/* if (route.params.icon) { */
+				}
+				const icon = route.params.icon;
+				{
+					/* } */
+				}
 				const { options } = descriptors[route.key];
 				const label =
 					options.tabBarLabel !== undefined
@@ -70,13 +87,6 @@ const TabBar = ({ state, descriptors, navigation }) => {
 					};
 				});
 
-				{
-					/* withTiming(flex, {
-							duration: 400,
-							easing: Easing.inOut(Easing.ease)
-						}) */
-				}
-
 				const textStyles = useAnimatedStyle(() => {
 					const translateX = interpolate(
 						focused.value,
@@ -84,15 +94,6 @@ const TabBar = ({ state, descriptors, navigation }) => {
 						[ 25, 0 ],
 						Extrapolate.CLAMP
 					);
-
-					{
-						/* const opacity = interpolate(
-						focused.value,
-						[ 0, 1 ],
-						[ 0, 1 ],
-						Extrapolate.CLAMP
-					); */
-					}
 
 					return {
 						transform: [
@@ -103,7 +104,8 @@ const TabBar = ({ state, descriptors, navigation }) => {
 					};
 				});
 
-				const iconStyles = useAnimatedStyle(() => {
+				{
+					/* const iconStyles = useAnimatedStyle(() => {
 					const translateX = interpolate(
 						focused.value,
 						[ 0, 1 ],
@@ -118,7 +120,8 @@ const TabBar = ({ state, descriptors, navigation }) => {
 							}
 						]
 					};
-				});
+				}); */
+				}
 
 				const onPress = () => {
 					const event = navigation.emit({
@@ -149,10 +152,10 @@ const TabBar = ({ state, descriptors, navigation }) => {
 						onLongPress={onLongPress}
 					>
 						<Animated.View style={[ styles.buttonContainer, animatedStyles ]}>
-							<AnimatedIcon
-								style={[ iconStyles ]}
-								name="home"
-								size={24}
+							<FontAwesome
+								// style={[ iconStyles ]}
+								name={icon}
+								size={28}
 								color="white"
 							/>
 							{isFocused ? (
@@ -161,7 +164,7 @@ const TabBar = ({ state, descriptors, navigation }) => {
 										{
 											color: 'white',
 											fontSize: 18,
-											marginLeft: 5,
+											marginLeft: 10,
 											fontFamily: 'Montserrat'
 										},
 										textStyles
@@ -175,6 +178,8 @@ const TabBar = ({ state, descriptors, navigation }) => {
 				);
 			})}
 		</View>
+		// 	</ScrollView>
+		// </KeyboardAvoidingView>
 	);
 };
 

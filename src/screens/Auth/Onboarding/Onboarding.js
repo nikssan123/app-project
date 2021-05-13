@@ -78,11 +78,12 @@ const Onboarding = ({ navigation }) => {
 				<Animated.ScrollView
 					horizontal
 					snapToInterval={width}
-					decelerationRate="normal"
+					decelerationRate="fast"
 					showsHorizontalScrollIndicator={false}
 					onScroll={scrollHandler}
 					bounces={false}
 					scrollEventThrottle={16}
+					overScrollMode="never"
 					ref={scroll}
 				>
 					{slides.map((slide, index) => {
