@@ -8,7 +8,7 @@ const Movies = props => {
 	return (
 		<View>
 			<MoviesSvg width={width * 0.8} height={width * 0.6} />
-			<Text style={styles.title}>Movies</Text>
+			<Text style={styles.title}>Explore New Movies</Text>
 		</View>
 	);
 };

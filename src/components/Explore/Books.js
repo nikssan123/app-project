@@ -1,15 +1,25 @@
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, ScrollView, Image } from 'react-native';
+
 import BooksSvg from '../../../assets/Images/Books';
+import Section from './Section';
+
+import { books } from '../../seed';
 
 const { width } = Dimensions.get('window');
 
 const Books = props => {
 	return (
-		<View>
+		<ScrollView
+			showsVerticalScrollIndicator={false}
+			contentContainerStyle={{ alignItems: 'center' }}
+		>
 			<BooksSvg width={width * 0.8} height={width * 0.58} />
-			<Text style={styles.title}>Books</Text>
-		</View>
+			<Text style={styles.title}>Find a New World to Dive In</Text>
+			<Section header1="Top Books for this Month" data={books} />
+			<Section header1="Reading" data={books} />
+			<Section header1="Wishlist" data={books} />
+		</ScrollView>
 	);
 };
 
@@ -20,7 +30,7 @@ const styles = StyleSheet.create({
 		fontSize: 24,
 		alignSelf: 'center',
 		textAlign: 'center',
-		marginTop: 20
+		marginTop: 25
 	}
 });
 

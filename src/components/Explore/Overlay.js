@@ -212,6 +212,7 @@ const Overlay = ({ onPress, booksOverlayButton, moviesOverlayButton }) => {
 					style={[ styles.image, booksImageStyles ]}
 					source={require('../../../assets/Images/books.jpg')}
 					resizeMode="cover"
+					blurRadius={3}
 				/>
 				<View style={styles.overlay}>
 					<View
@@ -249,6 +250,7 @@ const Overlay = ({ onPress, booksOverlayButton, moviesOverlayButton }) => {
 					style={[ styles.image, movieImageStyles ]}
 					source={require('../../../assets/Images/movies.jpg')}
 					resizeMode="cover"
+					blurRadius={3}
 				/>
 				<View style={styles.overlay}>
 					<View
