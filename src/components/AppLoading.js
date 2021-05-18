@@ -20,7 +20,8 @@ const AppLoader = () => {
 	const loadFonts = async () => {
 		await Font.loadAsync({
 			// Load a font `Montserrat` from a static resource
-			Montserrat: require('../../assets/Fonts/Montserrat-Regular.ttf')
+			Montserrat: require('../../assets/Fonts/Montserrat-Regular.ttf'),
+			MontserratBold: require('../../assets/Fonts/Montserrat-Bold.ttf')
 		});
 
 		setReady(true);

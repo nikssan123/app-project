@@ -4,7 +4,7 @@ import AppLoading from './src/components/AppLoading';
 import { StatusBar } from 'expo-status-bar';
 
 const App = () => {
-	// return <AppLoading />;
+	//f return <AppLoading />;
 	return (
 		<AppLoading>
 			<Navigation />

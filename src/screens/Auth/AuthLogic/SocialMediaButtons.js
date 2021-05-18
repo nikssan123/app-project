@@ -17,6 +17,7 @@ const SocialMediaButtons = ({ googlePressHandler, fbPressHandler }) => {
 			>
 				<TouchableOpacity onPress={googlePressHandler}>
 					<FontAwesome5 name="google" size={50} color="white" />
+					{/* <SocialIcon type="google" /> */}
 				</TouchableOpacity>
 				<TouchableOpacity style={{ marginLeft: 25 }} onPress={fbPressHandler}>
 					<FontAwesome5 name="facebook" size={50} color="white" />

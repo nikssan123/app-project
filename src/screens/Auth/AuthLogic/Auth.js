@@ -23,6 +23,7 @@ import Animated, {
 	Easing
 } from 'react-native-reanimated';
 import { MaterialIcons } from '@expo/vector-icons';
+import { StatusBar } from 'expo-status-bar';
 
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -41,7 +42,7 @@ const behaviour = Platform.OS === 'ios' ? 'paddding' : null;
 
 const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity);
 
-const Auth = ({ navigation }) => {
+const Auth = () => {
 	const { signin } = useContext(AuthContext);
 
 	const [ action, setAction ] = useState('signin');
@@ -51,11 +52,11 @@ const Auth = ({ navigation }) => {
 	const [ showPassword, setShowPassword ] = useState(true);
 
 	const buttonOpacity = useSharedValue(1);
-	// const showPassword = useSharedValue(true);
+	//g const showPassword = useSharedValue(true);
 	const titleOpacity = useSharedValue(1);
 
 	const handleSubmit = () => {
-		// if (action === 'signin') {
+		//kj if (action === 'signin') {
 		// 	// signin
 		// } else if (action === 'signup') {
 		// 	// signup
@@ -64,7 +65,7 @@ const Auth = ({ navigation }) => {
 		setLoading(true);
 
 		setTimeout(() => {
-			// navigation.navigate('Home');
+			//f navigation.navigate('Home');
 			titleOpacity.value = 1;
 			setLoading(false);
 			signin(email, password);
@@ -434,6 +435,7 @@ const Auth = ({ navigation }) => {
 					<Side container={styles.footer} animatedStyles={footerStyles} />
 				</LinearGradient>
 			</ScrollView>
+			<StatusBar />
 		</KeyboardAvoidingView>
 	);
 };

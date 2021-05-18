@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { View, Image, StyleSheet, Dimensions, TouchableOpacity, Text } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import Animated, {
 	useSharedValue,
 	useDerivedValue,
@@ -155,6 +156,7 @@ const Onboarding = ({ navigation }) => {
 					</TouchableOpacity>
 				</View>
 			</View>
+			<StatusBar />
 		</View>
 	);
 };

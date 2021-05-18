@@ -1,13 +1,6 @@
 import React from 'react';
 import { FontAwesome } from '@expo/vector-icons';
-import {
-	View,
-	Text,
-	TouchableWithoutFeedback,
-	StyleSheet,
-	KeyboardAvoidingView,
-	ScrollView
-} from 'react-native';
+import { View, Text, TouchableWithoutFeedback, StyleSheet } from 'react-native';
 
 import Animated, {
 	useDerivedValue,
@@ -19,8 +12,9 @@ import Animated, {
 	Easing,
 	interpolateColor
 } from 'react-native-reanimated';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-const AnimatedIcon = Animated.createAnimatedComponent(FontAwesome);
+// const AnimatedIcon = Animated.createAnimatedComponent(FontAwesome);
 
 // Filled the icons -> download them into svg ..
 
@@ -155,7 +149,7 @@ const TabBar = ({ state, descriptors, navigation }) => {
 							<FontAwesome
 								// style={[ iconStyles ]}
 								name={icon}
-								size={28}
+								size={24}
 								color="white"
 							/>
 							{isFocused ? (
@@ -187,7 +181,8 @@ const styles = StyleSheet.create({
 	container: {
 		flexDirection: 'row',
 		backgroundColor: '#251f41',
-		height: 70,
+		height: 60,
+		// height: 70,
 		justifyContent: 'center',
 		alignItems: 'center',
 		borderTopWidth: 0.3,

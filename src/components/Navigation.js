@@ -13,7 +13,7 @@ import SigninScreen from '../screens/Auth/AuthLogic/Auth';
 
 import HomeScreen from '../screens/Home';
 import ProfileScreen from '../screens/Profile';
-import FeedScreen from '../screens/Feed';
+import ExploreScreen from '../screens/Explore';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -22,10 +22,14 @@ const onboarding = true;
 
 export default () => {
 	const { state } = useContext(AuthContext);
+
 	return (
 		<NavigationContainer>
 			{state.isLoggedIn ? (
-				<Tab.Navigator tabBar={props => <TabBar {...props} />}>
+				<Tab.Navigator
+					tabBar={props => <TabBar {...props} />}
+					// tabBarOptions={{ keyboardHidesTabBar: true }}
+				>
 					<Tab.Screen
 						name="Home"
 						component={HomeScreen}
@@ -33,7 +37,7 @@ export default () => {
 					/>
 					<Tab.Screen
 						name="Explore"
-						component={FeedScreen}
+						component={ExploreScreen}
 						initialParams={{ icon: 'compass' }}
 					/>
 					<Tab.Screen
