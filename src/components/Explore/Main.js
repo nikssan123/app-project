@@ -19,11 +19,12 @@ const { width, height } = Dimensions.get('window');
 
 // const TAB_BAR_HEIGHT = 60;
 
-const Main = ({ booksOverlayButton }) => {
+const Main = ({ route }) => {
+	const { value } = route.params;
 	const [ searchTerm, setSearchTerm ] = useState('');
-	const [ showBooks, setShowBooks ] = useState(booksOverlayButton.value);
+	const [ showBooks, setShowBooks ] = useState(value);
 	const loaded = useSharedValue(false);
-	const press = useSharedValue(booksOverlayButton.value);
+	const press = useSharedValue(value);
 
 	useEffect(() => {
 		loaded.value = true;
@@ -87,24 +88,25 @@ const Main = ({ booksOverlayButton }) => {
 	});
 
 	return (
-		<Animated.View style={[ containerStyles ]}>
+		<Animated.View style={[ { backgroundColor: '#251f41' }, containerStyles ]}>
 			<View
 				style={{
 					marginTop: 10,
 					alignSelf: 'center',
 					flexDirection: 'row',
 					alignItems: 'center',
-					width: width * 0.9,
+					width: width * 0.8,
 					justifyContent: 'space-evenly'
 				}}
 			>
 				<TouchableOpacity
-					// style={{
-					// 	position: 'absolute',
-					// 	right: 0,
-					// 	top: height / 2 - TAB_BAR_HEIGHT,
-					// 	zIndex: 10
-					// }}
+					style={{
+						width: width * 0.2,
+						alignItems: 'center'
+						// borderColor: 'red',
+						// borderWidth: 2
+						// paddingRight: 10
+					}}
 					onPress={pressHandler}
 				>
 					{showBooks ? (

@@ -1,10 +1,15 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableWithoutFeedback } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { SharedElement } from 'react-navigation-shared-element';
 import Animated, { Extrapolate, interpolate, useAnimatedStyle } from 'react-native-reanimated';
 
 const ITEM_WIDTH = 150;
 
+// const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity);
+
 const ListItem = ({ item, x, index }) => {
+	const navigation = useNavigation();
 	// [ 0, ITEM_WIDTH * index, ITEM_WIDTH * (index + 1), ITEM_WIDTH * (index + 2) ],
 	const style = useAnimatedStyle(() => {
 		const scale = interpolate(
@@ -29,16 +34,22 @@ const ListItem = ({ item, x, index }) => {
 
 	return (
 		<Animated.View style={[ styles.container, style ]}>
-			<Image
-				style={{
-					width: 120,
-					height: 175,
-					borderRadius: 15
-				}}
-				source={{ uri: item.image }}
-				resizeMode="cover"
-			/>
-			<Text style={styles.title}>{item.author}</Text>
+			<TouchableWithoutFeedback onPress={() => navigation.navigate('Details', { item })}>
+				<SharedElement id={`${item.id}.image`}>
+					<Image
+						style={{
+							width: 120,
+							height: 175,
+							borderRadius: 15
+						}}
+						source={{ uri: item.image }}
+						resizeMode="cover"
+					/>
+				</SharedElement>
+			</TouchableWithoutFeedback>
+			<SharedElement id={`${item.id}.author`}>
+				<Text style={styles.title}>{item.author}</Text>
+			</SharedElement>
 		</Animated.View>
 	);
 };

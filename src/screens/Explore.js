@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, Dimensions } from 'react-native';
+import { View } from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Overlay from '../components/Explore/Overlay';
+import Navigation from '../components/Explore/Navigation';
 import Main from '../components/Explore/Main';
 // import { StatusBar } from 'expo-status-bar';
 
-const FeedScreen = props => {
+const ExploreScreen = props => {
 	const [ show, setShow ] = useState(false);
 
 	const booksOverlayButton = useSharedValue(false);
@@ -20,7 +21,7 @@ const FeedScreen = props => {
 			}}
 		>
 			{show ? (
-				<Main {...{ booksOverlayButton }} />
+				<Navigation {...{ booksOverlayButton }} />
 			) : (
 				<Overlay
 					{...{ booksOverlayButton, moviesOverlayButton }}
@@ -34,6 +35,8 @@ const FeedScreen = props => {
 	);
 };
 
-const styles = StyleSheet.create({});
+{
+	/* <Main {...{ booksOverlayButton }} /> */
+}
 
-export default FeedScreen;
+export default ExploreScreen;

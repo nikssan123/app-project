@@ -47,18 +47,18 @@ export default () => {
 					/>
 				</Tab.Navigator>
 			) : (
-				<Stack.Navigator>
+				<Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
 					{onboarding ? (
 						<Stack.Screen
 							name="Onboarding"
 							component={Onboarding}
-							options={{ headerShown: false }}
+							// options={{ headerShown: false }}
 						/>
 					) : null}
 					<Stack.Screen
 						name="Signin"
 						component={SigninScreen}
-						options={{ headerShown: false }}
+						// options={{ headerShown: false }}
 					/>
 				</Stack.Navigator>
 			)}

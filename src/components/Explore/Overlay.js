@@ -199,7 +199,7 @@ const Overlay = ({ onPress, booksOverlayButton, moviesOverlayButton }) => {
 	});
 
 	return (
-		<View style={{ zIndex: 0 }}>
+		<View style={{ zIndex: 0, backgroundColor: '#251f41' }}>
 			<Animated.View
 				style={[
 					styles.container,
