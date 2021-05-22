@@ -19,16 +19,42 @@ const ListItem = ({ item, x, index }) => {
 			Extrapolate.CLAMP
 		);
 
-		const transformZ = interpolate(
+		// const transformZ = interpolate(
+		// 	x.value,
+		// 	[ 0, ITEM_WIDTH * index, ITEM_WIDTH * (index + 2) ],
+		// 	[ 0, 0, -45 ],
+		// 	Extrapolate.CLAMP
+		// );
+
+		const perspective = interpolate(
 			x.value,
 			[ 0, ITEM_WIDTH * index, ITEM_WIDTH * (index + 2) ],
-			[ 0, 0, -45 ],
+			[ 1200, 1200, 600 ],
+			Extrapolate.CLAMP
+		);
+
+		// const translateX = interpolate(
+		// 	x.value,
+		// 	[ 0, ITEM_WIDTH * index, ITEM_WIDTH * (index + 2) ],
+		// 	[ 0, 0, -60 ],
+		// 	Extrapolate.CLAMP
+		// );
+		const rotateY = interpolate(
+			x.value,
+			[ 0, ITEM_WIDTH * index, ITEM_WIDTH * (index + 2) ],
+			[ 0, 0, 180 ],
 			Extrapolate.CLAMP
 		);
 
 		return {
 			// transform: [ { scale } ]
-			transform: [ { rotateZ: `${transformZ}deg` }, { scale } ]
+			// rotateZ: `${transformZ}deg` }
+			transform: [
+				{ scale },
+				{ perspective },
+				// { translateX },
+				{ rotateY: `${rotateY}deg` }
+			]
 		};
 	});
 

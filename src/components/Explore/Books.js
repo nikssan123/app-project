@@ -17,8 +17,8 @@ const Books = props => {
 			<BooksSvg width={width * 0.8} height={width * 0.58} />
 			<Text style={styles.title}>Find a New World to Dive In</Text>
 			<Section header1="Top Books for this Month" data={books} />
-			<Section header1="Reading" data={books} />
-			<Section header1="Wishlist" data={books} />
+			{/* <Section header1="Reading" data={books} />
+			<Section header1="Wishlist" data={books} /> */}
 		</ScrollView>
 	);
 };

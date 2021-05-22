@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Pressable } from 'react-native';
 import Animated, {
 	useSharedValue,
 	useAnimatedStyle,
@@ -9,7 +9,9 @@ import Animated, {
 	withDelay
 } from 'react-native-reanimated';
 import { MaterialIcons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
+import { SharedElement } from 'react-navigation-shared-element';
 
 import SearchBar from '../SearchBar';
 import Books from './Books';
@@ -19,7 +21,7 @@ const { width, height } = Dimensions.get('window');
 
 // const TAB_BAR_HEIGHT = 60;
 
-const Main = ({ route }) => {
+const Main = ({ route, navigation }) => {
 	const { value } = route.params;
 	const [ searchTerm, setSearchTerm ] = useState('');
 	const [ showBooks, setShowBooks ] = useState(value);
@@ -116,16 +118,36 @@ const Main = ({ route }) => {
 					)}
 					{/* <Text style={{ color: 'white', alignSelf: 'center' }}>Switch</Text> */}
 				</TouchableOpacity>
-				<SearchBar
-					containerStyles={{
-						borderRadius: 20,
-						paddingHorizontal: 15,
-						width: width * 0.7,
-						marginTop: null
-					}}
-					searchValue={searchTerm}
-					setSearchValue={setSearchTerm}
-				/>
+				{/* Shared Element */}
+				<SharedElement id="search">
+					{/* Mimic search bar not with Input */}
+					{/* <SearchBar
+						containerStyles={{
+							borderRadius: 20,
+							paddingHorizontal: 15,
+							width: width * 0.7,
+							marginTop: null
+						}}
+						searchValue={searchTerm}
+						setSearchValue={setSearchTerm}
+						onFocus={() => navigation.push('Search')}
+						// showKeyboard
+					/> */}
+					<Pressable
+						style={[
+							{
+								borderRadius: 20,
+								paddingHorizontal: 15,
+								width: width * 0.7
+							},
+							styles.searchBar
+						]}
+						onPress={() => navigation.push('Search')}
+					>
+						<AntDesign name="search1" size={22} color="white" />
+						<Text style={{ color: 'white', fontSize: 16, marginLeft: 5 }}>Search</Text>
+					</Pressable>
+				</SharedElement>
 			</View>
 
 			<Animated.View
@@ -154,6 +176,16 @@ const Main = ({ route }) => {
 const styles = StyleSheet.create({
 	innerContainer: {
 		alignItems: 'center'
+	},
+	searchBar: {
+		// width: width * 0.8,
+		backgroundColor: '#4f438c',
+		// marginTop: 10,
+		// padding: 5,
+		paddingVertical: 7,
+		flexDirection: 'row',
+		alignItems: 'center',
+		alignSelf: 'center'
 	}
 });
 

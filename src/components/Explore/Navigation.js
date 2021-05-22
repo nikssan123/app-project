@@ -1,23 +1,15 @@
 import React from 'react';
+import { Dimensions } from 'react-native';
 import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
 
 import Main from './Main';
 import Details from './Details';
 import Search from './Search';
+import { Extrapolate, interpolate, withTiming } from 'react-native-reanimated';
 
 const Stack = createSharedElementStackNavigator();
 
-const iosTransitionSpec = {
-	animation: 'spring',
-	config: {
-		stiffness: 1000,
-		damping: 500,
-		mass: 3,
-		overshootClamping: true,
-		restDisplacementThreshold: 10,
-		restSpeedThreshold: 10
-	}
-};
+const { height } = Dimensions.get('window');
 
 const Navigation = ({ booksOverlayButton }) => {
 	return (
@@ -28,15 +20,22 @@ const Navigation = ({ booksOverlayButton }) => {
 				gestureEnabled: true,
 				gestureDirection: 'horizontal',
 				animationEnabled: true,
-				cardStyleInterpolator: ({ current: { progress } }) => ({
-					cardStyle: {
-						opacity: progress
-					}
-				}),
-				transitionSpec: {
-					open: iosTransitionSpec,
-					close: iosTransitionSpec
-				}
+				animationTypeForReplace: 'push'
+				// cardStyleInterpolator: ({ current: { progress } }) => ({
+				// 	cardStyle: {
+				// 		opacity: progress
+				// 		// transform: [
+				// 		// 	{
+				// 		// 		translateY: progress.interpolate({
+				// 		// 			inputRange: [ 0, 1 ],
+				// 		// 			outputRange: [ height, 0 ]
+				// 		// 		})
+				// 		// 	}
+				// 		// ],
+				// 		// opacity: progress,
+				// 		// translateY: progress
+				// 	}
+				// })
 			}}
 			mode="modal"
 		>
@@ -44,6 +43,23 @@ const Navigation = ({ booksOverlayButton }) => {
 			<Stack.Screen
 				name="Details"
 				component={Details}
+				options={{
+					cardStyleInterpolator: ({ current: { progress } }) => ({
+						cardStyle: {
+							opacity: progress
+							// transform: [
+							// 	{
+							// 		translateY: progress.interpolate({
+							// 			inputRange: [ 0, 1 ],
+							// 			outputRange: [ height, 0 ]
+							// 		})
+							// 	}
+							// ],
+							// opacity: progress,
+							// translateY: progress
+						}
+					})
+				}}
 				sharedElementsConfig={route => {
 					const { id } = route.params.item;
 					return [
@@ -60,7 +76,34 @@ const Navigation = ({ booksOverlayButton }) => {
 					];
 				}}
 			/>
-			<Stack.Screen name="Search" component={Search} />
+			<Stack.Screen
+				name="Search"
+				component={Search}
+				options={{
+					cardStyleInterpolator: ({ current: { progress } }) => ({
+						cardStyle: {
+							transform: [
+								{
+									translateY: progress.interpolate({
+										inputRange: [ 0, 1 ],
+										outputRange: [ height, 0 ]
+									})
+								}
+							]
+						}
+					}),
+					gestureDirection: 'vertical'
+				}}
+				sharedElementsConfig={() => {
+					return [
+						{
+							id: `search`,
+							animation: 'move',
+							resize: 'clip'
+						}
+					];
+				}}
+			/>
 		</Stack.Navigator>
 	);
 };
