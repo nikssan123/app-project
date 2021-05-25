@@ -13,7 +13,6 @@ import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { SharedElement } from 'react-navigation-shared-element';
 
-import SearchBar from '../SearchBar';
 import Books from './Books';
 import Movies from './Movies';
 
@@ -23,7 +22,6 @@ const { width, height } = Dimensions.get('window');
 
 const Main = ({ route, navigation }) => {
 	const { value } = route.params;
-	const [ searchTerm, setSearchTerm ] = useState('');
 	const [ showBooks, setShowBooks ] = useState(value);
 	const loaded = useSharedValue(false);
 	const press = useSharedValue(value);
@@ -90,7 +88,7 @@ const Main = ({ route, navigation }) => {
 	});
 
 	return (
-		<Animated.View style={[ { backgroundColor: '#251f41' }, containerStyles ]}>
+		<Animated.View style={[ { backgroundColor: '#251f41', flex: 1 } ]}>
 			<View
 				style={{
 					marginTop: 10,
