@@ -7,7 +7,9 @@ import {
 	TextInput,
 	Pressable,
 	ActivityIndicator,
-	Keyboard
+	Keyboard,
+	FlatList,
+	Image
 } from 'react-native';
 import { SharedElement } from 'react-navigation-shared-element';
 import axios from 'axios';
@@ -15,12 +17,11 @@ import { AntDesign } from '@expo/vector-icons';
 
 import Wonder from '../../../assets/Images/Wonder';
 
-import DismissKeyboard from '../../common/DissmisKeyboard';
-
 const { width, height } = Dimensions.get('window');
 
 const Search = ({ navigation }) => {
 	const inputRef = useRef(null);
+	const [ data, setData ] = useState([]);
 	const [ searchTerm, setSearchTerm ] = useState('');
 	const [ loaded, setLoaded ] = useState(true);
 	const [ isKeyboardVisible, setKeyboardVisible ] = useState(false);
@@ -40,7 +41,6 @@ const Search = ({ navigation }) => {
 	}, []);
 
 	useEffect(() => {
-		// console.log(inputRef);
 		if (inputRef) {
 			inputRef.current.focus();
 		}
@@ -50,6 +50,9 @@ const Search = ({ navigation }) => {
 		() => {
 			if (searchTerm.length > 0) {
 				fetchData();
+			}
+			if (searchTerm.length === 0) {
+				setData([]);
 			}
 		},
 		[ searchTerm ]
@@ -65,16 +68,27 @@ const Search = ({ navigation }) => {
 
 	const fetchData = async () => {
 		setLoaded(false);
-		const response = await axios.get(
-			`https://www.googleapis.com/books/v1/volumes?q=${searchTerm}`
-		);
+		try {
+			const response = await axios.get(
+				// `https://www.googleapis.com/books/v1/volumes?q=intitle:${searchTerm}&printType=books&key=AIzaSyCyUjU2Px-6qYFTOtwrqQv9SBCBfa_7yWg`
+				`https://www.goodreads.com/book/auto_complete?format=json&q=${searchTerm}`
+			);
 
-		let books;
-		if (response.data.items) {
-			books = response.data.items.slice(0, 20);
+			// if (response.data.items) {
+			// 	setData(response.data.items);
+			// } else {
+			// 	setData([]);
+			// }
+
+			const newData = response.data.map(book => ({
+				...book,
+				imageUrl: book.imageUrl.replace(/_..../, '_SY275_')
+			}));
+
+			setData(newData);
+		} catch (e) {
+			console.log(e);
 		}
-
-		console.log(books[0]);
 
 		setLoaded(true);
 	};
@@ -127,28 +141,100 @@ const Search = ({ navigation }) => {
 			{/* <Pressable onPress={() => navigation.goBack()}>
 				<Text style={{ color: 'white', fontSize: 16, marginLeft: 5 }}>Done</Text>
 			</Pressable> */}
-			{/* Done Button to Go Back - Or display Loader if a axios request is sended */}
-			<View
-				style={{
-					flex: 1,
-					// justifyContent: 'center'
-					alignItems: 'center',
-					marginTop: 15
-				}}
-			>
-				<Wonder width={width * 0.7} height={height / 3} />
-			</View>
+			{data.length > 0 ? (
+				<FlatList
+					data={data}
+					keyExtractor={item => item.bookId}
+					renderItem={({ item }) => (
+						<Pressable
+							style={{
+								borderRadius: 15,
+								height: 225,
+								marginTop: 10,
+								padding: 10,
+								flexDirection: 'row',
+								backgroundColor: '#2a2540',
+								// borderColor: 'red',
+								// borderWidth: 2,
+								shadowOffset: {
+									height: 5,
+									width: 5
+								},
+								elevation: 5,
+								shadowOpacity: 0.5
+							}}
+						>
+							<Image
+								source={// item.volumeInfo.imageLinks ? (
+								// 	{ uri: item.volumeInfo.imageLinks.thumbnail }
+								// ) : (
+								// 	require('../../../assets/Images/book_placeholder.jpg')
+								// )
+								{ uri: item.imageUrl }}
+								// { uri: item.imageUrl }}
+								style={{ height: 200, width: 140, borderRadius: 15 }}
+								resizeMode="cover"
+							/>
+							<View style={{ flex: 1, marginLeft: 10 }}>
+								<Text
+									style={{
+										fontSize: 18,
+										color: 'white',
+										flexWrap: 'wrap',
+										fontFamily: 'Montserrat'
+									}}
+								>
+									{/* {item.volumeInfo.title} */}
+									{item.title}
+								</Text>
+								<Text
+									style={{
+										fontSize: 14,
+										color: 'white',
+										flexWrap: 'wrap',
+										flex: 1,
+										marginTop: 10,
+										opacity: 0.8
+									}}
+								>
+									{/* {item.volumeInfo.authors ? (
+										item.volumeInfo.authors
+									) : (
+										'No information'
+									)} */}
+									{item.author.name}
+								</Text>
+							</View>
+						</Pressable>
+					)}
+				/>
+			) : (
+				<View
+					style={{
+						flex: 1,
+						// justifyContent: 'center'
+						alignItems: 'center',
+						marginTop: 15
+					}}
+				>
+					<Wonder width={width * 0.7} height={height / 3} />
+				</View>
+			)}
 		</View>
 	);
 };
 
 const styles = StyleSheet.create({
 	searchContainer: {
+		width,
 		flexDirection: 'row',
 		justifyContent: 'center',
 		alignItems: 'center',
 		marginTop: 15,
-		marginLeft: 15
+		// marginHorizontal: 15,
+		paddingBottom: 15,
+		borderBottomColor: 'rgba(79, 67, 140, 0.4)',
+		borderBottomWidth: 2
 	},
 	textContainer: {
 		width: width * 0.8,

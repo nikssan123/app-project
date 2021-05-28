@@ -8,17 +8,13 @@ import Animated, {
 	withTiming,
 	withDelay
 } from 'react-native-reanimated';
-import { MaterialIcons } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
+import { AntDesign, Feather, MaterialIcons } from '@expo/vector-icons';
 import { SharedElement } from 'react-navigation-shared-element';
 
 import Books from './Books';
 import Movies from './Movies';
 
 const { width, height } = Dimensions.get('window');
-
-// const TAB_BAR_HEIGHT = 60;
 
 const Main = ({ route, navigation }) => {
 	const { value } = route.params;
@@ -35,25 +31,25 @@ const Main = ({ route, navigation }) => {
 		setShowBooks(!showBooks);
 	};
 
-	const containerStyles = useAnimatedStyle(() => {
-		// const borderRadius = interpolate(loaded.value, [ 0, 1 ], [ width, 0 ], Extrapolate.CLAMP);
-		const flex = interpolate(loaded.value, [ 0, 1 ], [ 0, 1 ], Extrapolate.CLAMP);
-		const translateY = interpolate(
-			loaded.value,
-			[ 0, 1 ],
-			[ height / 2 - 60, 0 ],
-			Extrapolate.CLAMP
-		);
+	// const containerStyles = useAnimatedStyle(() => {
+	// 	// const borderRadius = interpolate(loaded.value, [ 0, 1 ], [ width, 0 ], Extrapolate.CLAMP);
+	// 	const flex = interpolate(loaded.value, [ 0, 1 ], [ 0, 1 ], Extrapolate.CLAMP);
+	// 	const translateY = interpolate(
+	// 		loaded.value,
+	// 		[ 0, 1 ],
+	// 		[ height / 2 - 60, 0 ],
+	// 		Extrapolate.CLAMP
+	// 	);
 
-		return {
-			flex: withTiming(flex, { duration: 500 }),
-			transform: [
-				{
-					translateY: withTiming(translateY, { duration: 500 })
-				}
-			]
-		};
-	});
+	// 	return {
+	// 		flex: withTiming(flex, { duration: 500 }),
+	// 		transform: [
+	// 			{
+	// 				translateY: withTiming(translateY, { duration: 500 })
+	// 			}
+	// 		]
+	// 	};
+	// });
 
 	const booksZIndex = useAnimatedStyle(() => {
 		const zIndex = interpolate(press.value, [ 0, 1 ], [ -1, 1 ], Extrapolate.CLAMP);
@@ -103,9 +99,6 @@ const Main = ({ route, navigation }) => {
 					style={{
 						width: width * 0.2,
 						alignItems: 'center'
-						// borderColor: 'red',
-						// borderWidth: 2
-						// paddingRight: 10
 					}}
 					onPress={pressHandler}
 				>
@@ -114,23 +107,9 @@ const Main = ({ route, navigation }) => {
 					) : (
 						<Feather name="book" size={22} color="white" />
 					)}
-					{/* <Text style={{ color: 'white', alignSelf: 'center' }}>Switch</Text> */}
 				</TouchableOpacity>
 				{/* Shared Element */}
 				<SharedElement id="search">
-					{/* Mimic search bar not with Input */}
-					{/* <SearchBar
-						containerStyles={{
-							borderRadius: 20,
-							paddingHorizontal: 15,
-							width: width * 0.7,
-							marginTop: null
-						}}
-						searchValue={searchTerm}
-						setSearchValue={setSearchTerm}
-						onFocus={() => navigation.push('Search')}
-						// showKeyboard
-					/> */}
 					<Pressable
 						style={[
 							{
@@ -162,7 +141,6 @@ const Main = ({ route, navigation }) => {
 					{ ...StyleSheet.absoluteFill, top: 60 },
 					styles.innerContainer,
 					booksZIndex
-					// translateBooksStyles
 				]}
 			>
 				<Books />
@@ -176,10 +154,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center'
 	},
 	searchBar: {
-		// width: width * 0.8,
 		backgroundColor: '#4f438c',
-		// marginTop: 10,
-		// padding: 5,
 		paddingVertical: 7,
 		flexDirection: 'row',
 		alignItems: 'center',
