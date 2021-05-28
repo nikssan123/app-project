@@ -74,12 +74,6 @@ const Search = ({ navigation }) => {
 				`https://www.goodreads.com/book/auto_complete?format=json&q=${searchTerm}`
 			);
 
-			// if (response.data.items) {
-			// 	setData(response.data.items);
-			// } else {
-			// 	setData([]);
-			// }
-
 			const newData = response.data.map(book => ({
 				...book,
 				imageUrl: book.imageUrl.replace(/_..../, '_SY275_')
@@ -137,10 +131,6 @@ const Search = ({ navigation }) => {
 				)}
 			</View>
 
-			{/* </SharedElement> */}
-			{/* <Pressable onPress={() => navigation.goBack()}>
-				<Text style={{ color: 'white', fontSize: 16, marginLeft: 5 }}>Done</Text>
-			</Pressable> */}
 			{data.length > 0 ? (
 				<FlatList
 					data={data}
@@ -163,18 +153,23 @@ const Search = ({ navigation }) => {
 								elevation: 5,
 								shadowOpacity: 0.5
 							}}
+							onPress={() =>
+								navigation.navigate('Details', {
+									item: {
+										id: item.bookId,
+										author: item.author.name,
+										image: item.imageUrl,
+										title: item.title
+									}
+								})}
 						>
-							<Image
-								source={// item.volumeInfo.imageLinks ? (
-								// 	{ uri: item.volumeInfo.imageLinks.thumbnail }
-								// ) : (
-								// 	require('../../../assets/Images/book_placeholder.jpg')
-								// )
-								{ uri: item.imageUrl }}
-								// { uri: item.imageUrl }}
-								style={{ height: 200, width: 140, borderRadius: 15 }}
-								resizeMode="cover"
-							/>
+							<SharedElement id={`${item.bookId}.image`}>
+								<Image
+									source={{ uri: item.imageUrl }}
+									style={{ height: 200, width: 140, borderRadius: 15 }}
+									resizeMode="cover"
+								/>
+							</SharedElement>
 							<View style={{ flex: 1, marginLeft: 10 }}>
 								<Text
 									style={{
@@ -184,7 +179,6 @@ const Search = ({ navigation }) => {
 										fontFamily: 'Montserrat'
 									}}
 								>
-									{/* {item.volumeInfo.title} */}
 									{item.title}
 								</Text>
 								<Text
@@ -197,11 +191,6 @@ const Search = ({ navigation }) => {
 										opacity: 0.8
 									}}
 								>
-									{/* {item.volumeInfo.authors ? (
-										item.volumeInfo.authors
-									) : (
-										'No information'
-									)} */}
 									{item.author.name}
 								</Text>
 							</View>
@@ -212,7 +201,6 @@ const Search = ({ navigation }) => {
 				<View
 					style={{
 						flex: 1,
-						// justifyContent: 'center'
 						alignItems: 'center',
 						marginTop: 15
 					}}
