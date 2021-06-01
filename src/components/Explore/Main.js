@@ -119,7 +119,8 @@ const Main = ({ route, navigation }) => {
 							},
 							styles.searchBar
 						]}
-						onPress={() => navigation.push('Search')}
+						onPress={() =>
+							navigation.push('Search', { type: showBooks ? 'books' : 'movies' })}
 					>
 						<AntDesign name="search1" size={22} color="white" />
 						<Text style={{ color: 'white', fontSize: 16, marginLeft: 5 }}>Search</Text>

@@ -7,7 +7,8 @@ import {
 	Image,
 	Dimensions,
 	TouchableOpacity,
-	Pressable
+	Pressable,
+	FlatList
 } from 'react-native';
 import Animated, {
 	Extrapolate,
@@ -42,73 +43,77 @@ const Details = ({ route, navigation }) => {
 		loaded.value = true;
 	}, []);
 
-	const headerStyles = useAnimatedStyle(() => ({
+	const navBar = useAnimatedStyle(() => {
+		const opacity = interpolate(
+			y.value,
+			[ 0, MAX_HEADER_HEIGHT * 0.6 ],
+			[ 0, 1 ],
+			Extrapolate.CLAMP
+		);
+		const borderOpacity = interpolate(
+			y.value,
+			[ 0, MAX_HEADER_HEIGHT ],
+			[ 0, 1 ],
+			Extrapolate.CLAMP
+		);
+		return {
+			opacity: withTiming(opacity, { duration: 100 }),
+			transform: [ { translateY: y.value } ],
+			borderBottomColor: `rgba(79, 67, 140, ${borderOpacity})`,
+			borderBottomWidth: 1
+		};
+	});
+
+	const menuStyles = useAnimatedStyle(() => ({
 		transform: [
 			{
-				translateY: y.value
+				translateY: interpolate(
+					y.value,
+					[ 0, MAX_HEADER_HEIGHT ],
+					[ 0, 100 ],
+					Extrapolate.CLAMP
+				)
 			},
 			{
-				translateY: interpolate(
-					y.value,
-					[ 0, MAX_HEADER_HEIGHT ],
-					[ 0, -MAX_HEADER_HEIGHT / 1.4 ],
-					Extrapolate.CLAMP
-				)
+				translateY: y.value
 			}
 		]
 	}));
 
-	const imageStyles = useAnimatedStyle(() => ({
-		opacity: interpolate(y.value, [ 0, MAX_HEADER_HEIGHT - 100 ], [ 1, 0 ], Extrapolate.CLAMP),
+	const headerStyles = useAnimatedStyle(() => ({
+		opacity: interpolate(y.value, [ 0, MAX_HEADER_HEIGHT - 80 ], [ 1, 0 ], Extrapolate.CLAMP),
 		transform: [
+			// {
+			// 	translateY: y.value
+			// },
 			{
 				translateY: interpolate(
 					y.value,
 					[ 0, MAX_HEADER_HEIGHT ],
-					[ 0, 60 ],
+					// [ 0, -MAX_HEADER_HEIGHT / 1.4 ],
+					[ 0, -MAX_HEADER_HEIGHT ],
 					Extrapolate.CLAMP
 				)
 			}
 		]
 	}));
 
-	const titleStyles = useAnimatedStyle(() => ({
-		transform: [
-			{
-				translateY: interpolate(
-					y.value,
-					[ 0, MAX_HEADER_HEIGHT ],
-					[ 0, 60 ],
-					Extrapolate.CLAMP
-				)
-			}
-		]
-	}));
+	const titleStyles = useAnimatedStyle(() => {
+		const opacity = interpolate(
+			y.value,
+			[ 0, MAX_HEADER_HEIGHT * 0.2 ],
+			[ 1, 0 ],
+			Extrapolate.CLAMP
+		);
 
-	const authorStyles = useAnimatedStyle(() => {
 		return {
-			transform: [
-				{
-					translateY: interpolate(
-						y.value,
-						[ 0, MAX_HEADER_HEIGHT ],
-						[ 0, 60 ],
-						Extrapolate.CLAMP
-					)
-				}
-			],
-			opacity: interpolate(
-				y.value,
-				[ 0, MAX_HEADER_HEIGHT - 80 ],
-				[ 1, 0 ],
-				Extrapolate.CLAMP
-			)
+			opacity
 		};
 	});
 
 	const closeButtonStyles = useAnimatedStyle(() => {
 		return {
-			top: interpolate(y.value, [ 0, MAX_HEADER_HEIGHT ], [ 15, 25 ], Extrapolate.CLAMP)
+			top: interpolate(y.value, [ 0, MAX_HEADER_HEIGHT ], [ 15, 20 ], Extrapolate.CLAMP)
 		};
 	});
 
@@ -119,20 +124,18 @@ const Details = ({ route, navigation }) => {
 	}));
 
 	const mainStyles = useAnimatedStyle(() => ({
-		marginTop: interpolate(
-			y.value,
-			[ 0, MAX_HEADER_HEIGHT ],
-			[ 0, MAX_HEADER_HEIGHT + 10 ],
-			Extrapolate.CLAMP
-		),
 		transform: [
 			{
 				translateY: interpolate(
 					y.value,
 					[ 0, MAX_HEADER_HEIGHT ],
-					[ 0, -MAX_HEADER_HEIGHT / 1.4 + 10 ],
+					// [ 0, -MAX_HEADER_HEIGHT + (MAX_HEADER_HEIGHT + 50) ],
+					[ 0, -MAX_HEADER_HEIGHT ],
 					Extrapolate.CLAMP
 				)
+			},
+			{
+				translateY: y.value
 			}
 		]
 	}));
@@ -150,20 +153,32 @@ const Details = ({ route, navigation }) => {
 			<Animated.ScrollView
 				onScroll={scrollHandler}
 				showsVerticalScrollIndicator={false}
-				// onLayout={e => {
-				// 	scrollHeight.value = e.nativeEvent.layout.height;
-				// }}
+				overScrollMode="never"
+				bounces={false}
 			>
+				<Animated.View style={[ styles.navBar, navBar ]}>
+					<Image
+						source={{ uri: item.image }}
+						style={{ ...StyleSheet.absoluteFill, width, height: height * 0.5 }}
+						resizeMode="cover"
+						resizeMethod="scale"
+						blurRadius={5}
+					/>
+					<Text style={[ styles.author, { width, paddingHorizontal: 70 } ]}>
+						{item.title}
+					</Text>
+				</Animated.View>
 				<Animated.View style={[ styles.header, headerStyles ]}>
 					<Image
 						source={{ uri: item.image }}
 						style={{ ...StyleSheet.absoluteFill, width, height: height * 0.5 }}
 						resizeMode="cover"
 						resizeMethod="scale"
-						blurRadius={2}
+						blurRadius={5}
 					/>
 					{/* style={imageStyles} */}
-					<Animated.View style={imageStyles}>
+					{/* <Animated.View style={imageStyles}> */}
+					<Animated.View>
 						<SharedElement id={`${item.id}.image`}>
 							<Image
 								source={{ uri: item.image }}
@@ -178,20 +193,47 @@ const Details = ({ route, navigation }) => {
 							/>
 						</SharedElement>
 					</Animated.View>
+					{/* <Animated.Text style={[ styles.title, initialTitleStyles, titleStyles ]}> */}
 					<Animated.Text style={[ styles.title, initialTitleStyles, titleStyles ]}>
 						{item.title}
 					</Animated.Text>
 					{/*  style={authorStyles} */}
-					<Animated.View style={authorStyles}>
-						<SharedElement id={`${item.id}.author`}>
-							<Text style={[ styles.author ]}>{item.author}</Text>
-						</SharedElement>
-					</Animated.View>
+
+					<SharedElement id={`${item.id}.author`}>
+						<Text style={[ styles.author ]}>{item.info}</Text>
+					</SharedElement>
 				</Animated.View>
+
+				{/* Body */}
+				<Animated.View
+					style={[
+						{
+							position: 'absolute',
+							backgroundColor: 'red',
+							height: 50,
+							width
+						},
+						menuStyles
+					]}
+				/>
 				<Animated.View style={[ styles.main, mainStyles ]}>
-					<Text>Hi</Text>
-					<Text>Hi</Text>
-					<Text>Hi</Text>
+					<Animated.ScrollView
+						horizontal
+						showsHorizontalScrollIndicator={false}
+						bounces={false}
+						overScrollMode="never"
+						snapToInterval={width}
+						pagingEnabled
+						decelerationRate="fast"
+						scrollEventThrottle={16}
+					>
+						<View style={{ width, borderColor: 'red', borderWidth: 2 }}>
+							<Text>Info</Text>
+						</View>
+						<View style={{ width, borderColor: 'red', borderWidth: 2 }}>
+							<Text>Reviews</Text>
+						</View>
+					</Animated.ScrollView>
 				</Animated.View>
 			</Animated.ScrollView>
 		</React.Fragment>
@@ -199,12 +241,22 @@ const Details = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
+	navBar: {
+		height: 100,
+		width,
+		position: 'absolute',
+		zIndex: 1,
+		overflow: 'hidden',
+		alignItems: 'center',
+		justifyContent: 'center'
+	},
 	header: {
 		height: height * 0.5,
 		width,
 		justifyContent: 'center',
 		alignItems: 'center',
-		paddingHorizontal: 70
+		paddingHorizontal: 70,
+		opacity: 0.2
 	},
 	closeButton: {
 		position: 'absolute',
@@ -233,8 +285,7 @@ const styles = StyleSheet.create({
 		fontFamily: 'Montserrat'
 	},
 	main: {
-		height: 2000,
-		zIndex: -1
+		height: 2000
 	}
 });
 

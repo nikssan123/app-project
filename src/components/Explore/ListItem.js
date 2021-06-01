@@ -74,7 +74,7 @@ const ListItem = ({ item, x, index }) => {
 				</SharedElement>
 			</TouchableWithoutFeedback>
 			<SharedElement id={`${item.id}.author`}>
-				<Text style={styles.title}>{item.author}</Text>
+				<Text style={styles.title}>{item.info}</Text>
 			</SharedElement>
 		</Animated.View>
 	);

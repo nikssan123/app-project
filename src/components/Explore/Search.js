@@ -11,6 +11,7 @@ import {
 	FlatList,
 	Image
 } from 'react-native';
+import Constants from 'expo-constants';
 import { SharedElement } from 'react-navigation-shared-element';
 import axios from 'axios';
 import { AntDesign } from '@expo/vector-icons';
@@ -19,12 +20,21 @@ import Wonder from '../../../assets/Images/Wonder';
 
 const { width, height } = Dimensions.get('window');
 
-const Search = ({ navigation }) => {
+const Search = ({ navigation, route }) => {
 	const inputRef = useRef(null);
 	const [ data, setData ] = useState([]);
 	const [ searchTerm, setSearchTerm ] = useState('');
 	const [ loaded, setLoaded ] = useState(true);
 	const [ isKeyboardVisible, setKeyboardVisible ] = useState(false);
+
+	const MOVIES_API_KEY = Constants.manifest.extra.MOVIE_DB_API_KEY;
+
+	const { type } = route.params;
+	const url =
+		type === 'books'
+			? 'https://www.goodreads.com/book/auto_complete?format=json&q='
+			: `
+https://api.themoviedb.org/3/search/multi?api_key=${MOVIES_API_KEY}&page=1&query=`;
 
 	useEffect(() => {
 		const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
@@ -69,15 +79,29 @@ const Search = ({ navigation }) => {
 	const fetchData = async () => {
 		setLoaded(false);
 		try {
-			const response = await axios.get(
-				// `https://www.googleapis.com/books/v1/volumes?q=intitle:${searchTerm}&printType=books&key=AIzaSyCyUjU2Px-6qYFTOtwrqQv9SBCBfa_7yWg`
-				`https://www.goodreads.com/book/auto_complete?format=json&q=${searchTerm}`
-			);
+			const response = await axios.get(`${url}${searchTerm}`);
 
-			const newData = response.data.map(book => ({
-				...book,
-				imageUrl: book.imageUrl.replace(/_..../, '_SY275_')
-			}));
+			let newData = [];
+			if (type === 'books') {
+				newData = response.data.map(book => ({
+					id: book.bookId,
+					title: book.title,
+					info: book.author.name,
+					imageUrl: book.imageUrl.replace(/_..../, '_SY275_')
+				}));
+			} else if (type === 'movies') {
+				if (response.data.results) {
+					newData = response.data.results.map(movie => ({
+						id: movie.id,
+						title: movie.media_type === 'movie' ? movie.title : movie.name,
+						info:
+							movie.media_type === 'movie'
+								? movie.release_date
+								: movie.first_air_date,
+						imageUrl: `https://image.tmdb.org/t/p/original/${movie.poster_path}`
+					}));
+				}
+			}
 
 			setData(newData);
 		} catch (e) {
@@ -134,36 +158,21 @@ const Search = ({ navigation }) => {
 			{data.length > 0 ? (
 				<FlatList
 					data={data}
-					keyExtractor={item => item.bookId}
+					keyExtractor={item => item.id}
 					renderItem={({ item }) => (
 						<Pressable
-							style={{
-								borderRadius: 15,
-								height: 225,
-								marginTop: 10,
-								padding: 10,
-								flexDirection: 'row',
-								backgroundColor: '#2a2540',
-								// borderColor: 'red',
-								// borderWidth: 2,
-								shadowOffset: {
-									height: 5,
-									width: 5
-								},
-								elevation: 5,
-								shadowOpacity: 0.5
-							}}
+							style={styles.listItem}
 							onPress={() =>
 								navigation.navigate('Details', {
 									item: {
-										id: item.bookId,
-										author: item.author.name,
+										id: item.id,
+										info: item.info,
 										image: item.imageUrl,
 										title: item.title
 									}
 								})}
 						>
-							<SharedElement id={`${item.bookId}.image`}>
+							<SharedElement id={`${item.id}.image`}>
 								<Image
 									source={{ uri: item.imageUrl }}
 									style={{ height: 200, width: 140, borderRadius: 15 }}
@@ -183,7 +192,7 @@ const Search = ({ navigation }) => {
 								</Text>
 								<Text
 									style={{
-										fontSize: 14,
+										fontSize: 16,
 										color: 'white',
 										flexWrap: 'wrap',
 										flex: 1,
@@ -191,7 +200,7 @@ const Search = ({ navigation }) => {
 										opacity: 0.8
 									}}
 								>
-									{item.author.name}
+									{item.info}
 								</Text>
 							</View>
 						</Pressable>
@@ -206,6 +215,17 @@ const Search = ({ navigation }) => {
 					}}
 				>
 					<Wonder width={width * 0.7} height={height / 3} />
+					<Text
+						style={{
+							fontSize: 26,
+							color: 'white',
+							textAlign: 'center',
+							fontFamily: 'Montserrat',
+							marginTop: 20
+						}}
+					>
+						Explore New Worlds
+					</Text>
 				</View>
 			)}
 		</View>
@@ -234,6 +254,22 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		alignSelf: 'center',
 		borderRadius: 20
+	},
+	listItem: {
+		borderRadius: 15,
+		height: 225,
+		marginTop: 10,
+		padding: 10,
+		flexDirection: 'row',
+		backgroundColor: '#2a2540',
+		// borderColor: 'red',
+		// borderWidth: 2,
+		shadowOffset: {
+			height: 5,
+			width: 5
+		},
+		elevation: 5,
+		shadowOpacity: 0.5
 	}
 });
 
