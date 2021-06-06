@@ -7,22 +7,23 @@ import {
 	TextInput,
 	Pressable,
 	ActivityIndicator,
-	Keyboard,
-	FlatList,
-	Image
+	Keyboard
 } from 'react-native';
 import Constants from 'expo-constants';
 import { SharedElement } from 'react-navigation-shared-element';
 import axios from 'axios';
 import { AntDesign } from '@expo/vector-icons';
 
-import Wonder from '../../../assets/Images/Wonder';
+import ItemList from './ItemList';
 
 const { width, height } = Dimensions.get('window');
 
 const Search = ({ navigation, route }) => {
+	const cancelTokenSource = axios.CancelToken.source();
+
 	const inputRef = useRef(null);
 	const [ data, setData ] = useState([]);
+	const [ err, setErr ] = useState('');
 	const [ searchTerm, setSearchTerm ] = useState('');
 	const [ loaded, setLoaded ] = useState(true);
 	const [ isKeyboardVisible, setKeyboardVisible ] = useState(false);
@@ -33,8 +34,7 @@ const Search = ({ navigation, route }) => {
 	const url =
 		type === 'books'
 			? 'https://www.goodreads.com/book/auto_complete?format=json&q='
-			: `
-https://api.themoviedb.org/3/search/multi?api_key=${MOVIES_API_KEY}&page=1&query=`;
+			: `https://api.themoviedb.org/3/search/multi?api_key=${MOVIES_API_KEY}&page=1&query=`;
 
 	useEffect(() => {
 		const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
@@ -47,6 +47,7 @@ https://api.themoviedb.org/3/search/multi?api_key=${MOVIES_API_KEY}&page=1&query
 		return () => {
 			keyboardDidHideListener.remove();
 			keyboardDidShowListener.remove();
+			cancelTokenSource.cancel();
 		};
 	}, []);
 
@@ -63,6 +64,7 @@ https://api.themoviedb.org/3/search/multi?api_key=${MOVIES_API_KEY}&page=1&query
 			}
 			if (searchTerm.length === 0) {
 				setData([]);
+				setErr('');
 			}
 		},
 		[ searchTerm ]
@@ -72,27 +74,34 @@ https://api.themoviedb.org/3/search/multi?api_key=${MOVIES_API_KEY}&page=1&query
 		if (isKeyboardVisible) {
 			Keyboard.dismiss();
 		} else {
-			navigation.push('Main');
+			const value = type === 'books' ? true : false;
+			navigation.push('Main', { value });
 		}
 	};
 
 	const fetchData = async () => {
 		setLoaded(false);
 		try {
-			const response = await axios.get(`${url}${searchTerm}`);
-
+			const response = await axios.get(`${url}${searchTerm}`, {
+				cancelToken: cancelTokenSource.token
+			});
+			// if (response.status >= 200 && response.status < 300) {
 			let newData = [];
 			if (type === 'books') {
-				newData = response.data.map(book => ({
-					id: book.bookId,
-					title: book.title,
-					info: book.author.name,
-					imageUrl: book.imageUrl.replace(/_..../, '_SY275_')
-				}));
+				if (response.data.length === 0) {
+					setErr('No results found!');
+				} else {
+					newData = response.data.map(book => ({
+						id: book.bookId,
+						title: book.title,
+						info: book.author.name,
+						imageUrl: book.imageUrl.replace(/_..../, '_SY275_')
+					}));
+				}
 			} else if (type === 'movies') {
-				if (response.data.results) {
+				if (response.data.total_results > 0) {
 					newData = response.data.results.map(movie => ({
-						id: movie.id,
+						id: String(movie.id),
 						title: movie.media_type === 'movie' ? movie.title : movie.name,
 						info:
 							movie.media_type === 'movie'
@@ -100,15 +109,17 @@ https://api.themoviedb.org/3/search/multi?api_key=${MOVIES_API_KEY}&page=1&query
 								: movie.first_air_date,
 						imageUrl: `https://image.tmdb.org/t/p/original/${movie.poster_path}`
 					}));
+				} else {
+					setErr('No results found!');
 				}
 			}
 
 			setData(newData);
 		} catch (e) {
-			console.log(e);
+			setErr('Something went wrong!');
+		} finally {
+			setLoaded(true);
 		}
-
-		setLoaded(true);
 	};
 
 	return (
@@ -155,79 +166,22 @@ https://api.themoviedb.org/3/search/multi?api_key=${MOVIES_API_KEY}&page=1&query
 				)}
 			</View>
 
-			{data.length > 0 ? (
-				<FlatList
-					data={data}
-					keyExtractor={item => item.id}
-					renderItem={({ item }) => (
-						<Pressable
-							style={styles.listItem}
-							onPress={() =>
-								navigation.navigate('Details', {
-									item: {
-										id: item.id,
-										info: item.info,
-										image: item.imageUrl,
-										title: item.title
-									}
-								})}
-						>
-							<SharedElement id={`${item.id}.image`}>
-								<Image
-									source={{ uri: item.imageUrl }}
-									style={{ height: 200, width: 140, borderRadius: 15 }}
-									resizeMode="cover"
-								/>
-							</SharedElement>
-							<View style={{ flex: 1, marginLeft: 10 }}>
-								<Text
-									style={{
-										fontSize: 18,
-										color: 'white',
-										flexWrap: 'wrap',
-										fontFamily: 'Montserrat'
-									}}
-								>
-									{item.title}
-								</Text>
-								<Text
-									style={{
-										fontSize: 16,
-										color: 'white',
-										flexWrap: 'wrap',
-										flex: 1,
-										marginTop: 10,
-										opacity: 0.8
-									}}
-								>
-									{item.info}
-								</Text>
-							</View>
-						</Pressable>
-					)}
-				/>
-			) : (
-				<View
-					style={{
-						flex: 1,
-						alignItems: 'center',
-						marginTop: 15
-					}}
-				>
-					<Wonder width={width * 0.7} height={height / 3} />
-					<Text
-						style={{
-							fontSize: 26,
-							color: 'white',
-							textAlign: 'center',
-							fontFamily: 'Montserrat',
-							marginTop: 20
-						}}
-					>
-						Explore New Worlds
-					</Text>
-				</View>
-			)}
+			<ItemList
+				err={err}
+				data={data}
+				width={width}
+				height={height}
+				onPress={item =>
+					navigation.navigate('Details', {
+						item: {
+							id: item.id,
+							info: item.info,
+							image: item.imageUrl,
+							title: item.title
+						},
+						type
+					})}
+			/>
 		</View>
 	);
 };
@@ -247,29 +201,12 @@ const styles = StyleSheet.create({
 	textContainer: {
 		width: width * 0.8,
 		backgroundColor: '#4f438c',
-
 		padding: 5,
 		paddingHorizontal: 15,
 		flexDirection: 'row',
 		alignItems: 'center',
 		alignSelf: 'center',
 		borderRadius: 20
-	},
-	listItem: {
-		borderRadius: 15,
-		height: 225,
-		marginTop: 10,
-		padding: 10,
-		flexDirection: 'row',
-		backgroundColor: '#2a2540',
-		// borderColor: 'red',
-		// borderWidth: 2,
-		shadowOffset: {
-			height: 5,
-			width: 5
-		},
-		elevation: 5,
-		shadowOpacity: 0.5
 	}
 });
 

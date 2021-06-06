@@ -8,7 +8,7 @@ const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 const { width } = Dimensions.get('window');
 
-const Section = ({ header1, data }) => {
+const Section = ({ header1, data, type, style }) => {
 	const x = useSharedValue(0);
 
 	const scrollHandler = useAnimatedScrollHandler({
@@ -18,7 +18,7 @@ const Section = ({ header1, data }) => {
 	});
 
 	return (
-		<View style={styles.container}>
+		<View style={[ styles.container, style ]}>
 			<View style={{ paddingHorizontal: 20 }}>
 				<Text style={{ fontSize: 24, color: 'white', fontFamily: 'Montserrat' }}>
 					{header1}
@@ -33,7 +33,9 @@ const Section = ({ header1, data }) => {
 				overScrollMode="never"
 				data={data}
 				keyExtractor={(_, index) => String(index)}
-				renderItem={({ item, index }) => <ListItem x={x} item={item} index={index} />}
+				renderItem={({ item, index }) => (
+					<ListItem type={type} x={x} item={item} index={index} />
+				)}
 			/>
 		</View>
 	);

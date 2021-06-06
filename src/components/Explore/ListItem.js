@@ -4,11 +4,11 @@ import { useNavigation } from '@react-navigation/native';
 import { SharedElement } from 'react-navigation-shared-element';
 import Animated, { Extrapolate, interpolate, useAnimatedStyle } from 'react-native-reanimated';
 
-const ITEM_WIDTH = 150;
+const ITEM_WIDTH = 145;
 
 // const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity);
 
-const ListItem = ({ item, x, index }) => {
+const ListItem = ({ item, x, index, type }) => {
 	const navigation = useNavigation();
 	// [ 0, ITEM_WIDTH * index, ITEM_WIDTH * (index + 1), ITEM_WIDTH * (index + 2) ],
 	const style = useAnimatedStyle(() => {
@@ -60,7 +60,7 @@ const ListItem = ({ item, x, index }) => {
 
 	return (
 		<Animated.View style={[ styles.container, style ]}>
-			<TouchableWithoutFeedback onPress={() => navigation.navigate('Details', { item })}>
+			<TouchableWithoutFeedback onPress={() => navigation.push('Details', { item, type })}>
 				<SharedElement id={`${item.id}.image`}>
 					<Image
 						style={{

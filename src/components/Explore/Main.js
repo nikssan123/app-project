@@ -83,6 +83,8 @@ const Main = ({ route, navigation }) => {
 		};
 	});
 
+	const type = press.value ? 'books' : 'movies';
+
 	return (
 		<Animated.View style={[ { backgroundColor: '#251f41', flex: 1 } ]}>
 			<View
@@ -135,7 +137,7 @@ const Main = ({ route, navigation }) => {
 					moviesZIndex
 				]}
 			>
-				<Movies />
+				<Movies type={type} />
 			</Animated.View>
 			<Animated.View
 				style={[
@@ -144,7 +146,7 @@ const Main = ({ route, navigation }) => {
 					booksZIndex
 				]}
 			>
-				<Books />
+				<Books type={type} />
 			</Animated.View>
 		</Animated.View>
 	);

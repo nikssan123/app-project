@@ -3,8 +3,8 @@ import { Dimensions } from 'react-native';
 import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
 
 import Main from './Main';
-import Details from './Details';
-import Search from './Search';
+import Details from './Details/Details';
+import Search from './Search/Search';
 
 const Stack = createSharedElementStackNavigator();
 
@@ -16,10 +16,10 @@ const Navigation = ({ booksOverlayButton }) => {
 			screenOptions={{
 				headerShown: false,
 				cardStyle: { backgroundColor: '#251f41' },
-				gestureEnabled: true,
-				gestureDirection: 'horizontal',
-				animationEnabled: true,
-				animationTypeForReplace: 'push',
+				gestureEnabled: false,
+				// gestureDirection: 'horizontal',
+				// animationEnabled: true,
+				// animationTypeForReplace: 'push',
 				cardStyleInterpolator: ({ current: { progress } }) => ({
 					cardStyle: {
 						opacity: progress

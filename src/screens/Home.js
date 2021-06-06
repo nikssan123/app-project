@@ -5,9 +5,7 @@ import {
 	TouchableOpacity,
 	TouchableWithoutFeedback,
 	StyleSheet,
-	ScrollView,
-	Dimensions,
-	TextInput
+	Dimensions
 } from 'react-native';
 import Animated, {
 	useSharedValue,
@@ -18,7 +16,6 @@ import Animated, {
 	Extrapolate
 } from 'react-native-reanimated';
 import { StatusBar } from 'expo-status-bar';
-import { AntDesign } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import SearchBar from '../components/SearchBar';
@@ -123,32 +120,7 @@ const HomeScreen = props => {
 		<SafeAreaView style={styles.container}>
 			<View style={styles.header}>
 				{/* search bar */}
-				<SearchBar
-					searchValue={search}
-					setSearchValue={setSearch}
-				/>
-				{/* <View style={styles.searchBar}>
-					<AntDesign name="search1" size={22} color="white" />
-					<TextInput
-						autoCapitalize="none"
-						autoCorrect={false}
-						style={{
-							flex: 1,
-							marginLeft: 5,
-							color: 'white',
-							fontSize: 16
-						}}
-						placeholder="Search"
-						placeholderTextColor="white"
-						value={search}
-						onChangeText={e => setSearch(e)}
-					/>
-					{search.length > 0 ? (
-						<TouchableOpacity onPress={() => setSearch('')}>
-							<AntDesign name="close" size={22} color="white" />
-						</TouchableOpacity>
-					) : null}
-				</View> */}
+				<SearchBar searchValue={search} setSearchValue={setSearch} />
 
 				<Animated.View style={[ styles.topNav, navMenuStyles ]}>
 					{/* <View style={styles.topNav}> */}

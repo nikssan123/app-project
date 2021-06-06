@@ -4,11 +4,12 @@ import MoviesSvg from '../../../assets/Images/Movies';
 
 const { width } = Dimensions.get('window');
 
-const Movies = props => {
+const Movies = ({ type }) => {
 	return (
 		<View>
 			<MoviesSvg width={width * 0.8} height={width * 0.6} />
 			<Text style={styles.title}>Explore New Movies</Text>
+			{/* Section type */}
 		</View>
 	);
 };
