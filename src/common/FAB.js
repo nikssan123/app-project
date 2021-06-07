@@ -1,9 +1,10 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
-const FAB = ({ containerStyles, innerComponent, onPress }) => {
+const FAB = ({ containerStyles, innerComponent, onPress, disabled }) => {
 	return (
 		<TouchableOpacity
+			disabled={disabled}
 			activeOpacity={0.8}
 			onPress={onPress}
 			style={[ styles.container, containerStyles ]}

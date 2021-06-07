@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "FinalApp",
-    "slug": "FinalApp",
-    "version": "1.0.3",
+    "name": "Vortex",
+    "slug": "Vortex",
+    "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -18,14 +18,14 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.fornaxelit.customapp"
+      "bundleIdentifier": "com.fornaxelit.vortex"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.fornaxelit.customapp",
+      "package": "com.fornaxelit.vortex",
       "versionCode": 1,
       "softwareKeyboardLayoutMode": "pan"
     },

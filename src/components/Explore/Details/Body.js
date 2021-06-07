@@ -1,5 +1,13 @@
 import React, { useState, useCallback, useRef } from 'react';
-import { View, Text, StyleSheet, Dimensions, ActivityIndicator, Image } from 'react-native';
+import {
+	View,
+	Text,
+	StyleSheet,
+	Dimensions,
+	ActivityIndicator,
+	Image,
+	Pressable
+} from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -9,6 +17,7 @@ const { width } = Dimensions.get('window');
 
 const Body = ({ item, similarItems, loaded, err, type, readLessPress }) => {
 	// const scrollRef = useRef(null);
+	// const bottomSheet = useRef(null);
 
 	const [ textShown, setTextShown ] = useState(false);
 	const [ lengthMore, setLengthMore ] = useState(false); //to show the "Read more & Less Line"
@@ -134,13 +143,18 @@ const Body = ({ item, similarItems, loaded, err, type, readLessPress }) => {
 							header1={`Similar ${type[0].toUpperCase()}${type.substring(1)}`}
 							data={similarItems}
 							type={type}
-							style={{ width: width * 0.9 }}
+							style={{ width: width * 0.88 }}
 						/>
-						<View>
-							<Text>Join like-minded people in the subvortex!</Text>
+						<View style={styles.communityContainer}>
+							<Text style={styles.text}>
+								Join like-minded people in the subvortex!
+							</Text>
+							<Pressable>
+								<Text style={styles.text}>Join</Text>
+							</Pressable>
 						</View>
 					</View>
-					<View style={{ width, height: 500 }}>
+					<View style={{ width, height: 500, marginTop: 25 }}>
 						<View style={{ flexDirection: 'row', alignItems: 'center' }}>
 							<Text
 								style={{
@@ -210,7 +224,21 @@ const styles = StyleSheet.create({
 		color: 'white',
 		fontSize: 18
 	},
-	communityContainer: {}
+	communityContainer: {
+		// height: 50,
+		width: width * 0.87,
+		padding: 10,
+		backgroundColor: '#332b59',
+		borderRadius: 10,
+		flexDirection: 'row',
+		overflow: 'hidden',
+		justifyContent: 'space-evenly'
+	},
+	text: {
+		color: 'white',
+		fontSize: 18,
+		fontFamily: 'Montserrat'
+	}
 });
 
 export default Body;

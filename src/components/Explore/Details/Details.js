@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity } from 'react-native';
 import Animated, {
 	Extrapolate,
@@ -11,6 +11,11 @@ import Animated, {
 import Contants from 'expo-constants';
 import axios from 'axios';
 import { AntDesign } from '@expo/vector-icons';
+import BottomSheet from '@gorhom/bottom-sheet';
+
+import CustomBackground from './BottomSheet/CustomBackground';
+import CustomBackdrop from './BottomSheet/CustomBackdrop';
+import Component from './BottomSheet/Component';
 
 import FAB from '../../../common/FAB';
 import Header from './Header';
@@ -30,15 +35,19 @@ const Details = ({ route, navigation }) => {
 	const GOOGLE_API_KEY = Contants.manifest.extra.GOOGLE_BOOK_API_KEY;
 
 	const verticalScroll = useRef(null);
+	const bottomSheetRef = useRef(null);
 
 	const [ err, setErr ] = useState('');
 	const [ foundItem, setFoundItem ] = useState({});
 	const [ similarItems, setSimilarItems ] = useState([]);
 	const [ loaded, setLoaded ] = useState(false);
 	const [ changeTextSize, setChangeTextSize ] = useState(false);
+	const [ pressable, setPressable ] = useState(true);
 
 	// const x = useSharedValue(0);
 	const y = useSharedValue(0);
+	// const [ open, setOpen ] = useState(false);
+	const open = useSharedValue(false);
 
 	const fetchItem = async () => {
 		try {
@@ -62,6 +71,14 @@ const Details = ({ route, navigation }) => {
 				} else {
 					setErr('Something went wrong!');
 				}
+			} else if (type === 'movies') {
+				const uri = encodeURI('g');
+
+				const response = await axios.get(uri, {
+					cancelToken: cancelTokenSource.token
+				});
+			} else {
+				setErr('Something went wrong!');
 			}
 		} catch (e) {
 			setErr('Something went wrong!');
@@ -148,6 +165,10 @@ const Details = ({ route, navigation }) => {
 		]
 	}));
 
+	const bottomSheetStyles = useAnimatedStyle(() => ({
+		zIndex: open.value ? 100 : -1
+	}));
+
 	const handleMenuReviewPress = () => {
 		if (verticalScroll.current) {
 			verticalScroll.current.scrollTo({
@@ -182,9 +203,49 @@ const Details = ({ route, navigation }) => {
 		<React.Fragment>
 			<FAB
 				containerStyles={{ backgroundColor: '#7568b6' }}
-				onPress={() => console.log('pressed')}
+				onPress={() => {
+					if (bottomSheetRef.current) {
+						bottomSheetRef.current.expand();
+						// setOpen(true);
+						open.value = true;
+					}
+				}}
 				innerComponent={<AntDesign name="plus" size={24} color="white" />}
+				disabled={!pressable}
 			/>
+			<Animated.View
+				style={[
+					{
+						position: 'absolute',
+						bottom: 0,
+						// zIndex: -1,
+						width,
+						height
+					},
+					bottomSheetStyles
+				]}
+			>
+				<BottomSheet
+					ref={bottomSheetRef}
+					index={-1}
+					snapPoints={[ -1, '50%' ]}
+					onChange={index => {
+						if (index === 0) {
+							setPressable(false);
+							if (bottomSheetRef.current) {
+								bottomSheetRef.current.close();
+								open.value = false;
+							}
+							setTimeout(() => setPressable(true), 300);
+						}
+					}}
+					backgroundComponent={CustomBackground}
+					backdropComponent={CustomBackdrop}
+					// style={{ backgroundColor: 'red' }}
+				>
+					<Component />
+				</BottomSheet>
+			</Animated.View>
 			<AnimatedTouchableOpacity
 				style={[ styles.closeButton, closeButtonStyles ]}
 				onPress={() => {
@@ -262,7 +323,7 @@ const styles = StyleSheet.create({
 		right: 5,
 		justifyContent: 'center',
 		alignItems: 'center',
-		zIndex: 10,
+		zIndex: 101,
 		width: 60,
 		height: 60,
 		shadowOffset: {
